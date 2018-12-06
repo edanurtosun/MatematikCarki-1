@@ -1,0 +1,443 @@
+#include <stdio.h>
+#include <stdlib.h>
+//#include <file.h>
+#include <time.h>
+int boyut();
+int get_determinant(int mtrx_size,int mat[mtrx_size][mtrx_size]);
+int cark(int cdonme);
+int ozdegerbul(int n,int *nmatris[n][n]);
+int schurteoremi(int n,int *nmatris[n][n]);
+int ozvektorbul(int n,int *nmatris[n][n]);
+int nilpotentmatris(int n);
+
+int main()
+{
+    int cdonme;
+    int carkislemi;
+    int byt;
+    printf("--------------------------------------------------------------------------\n");
+    printf("\t\t\t\t MATEMATIK CARKI \t\t \n");
+    printf("--------------------------------------------------------------------------\n");
+    printf("\nBu Program Asagida Bulunan Islemleri Yapmak Icin Gelistirilmistir! \n");
+    printf("1-Oz deger bulma\n2-Schur Teoremi\n3-Oz vektor bulma\n4-Nilpotent matris \n\n");
+    printf("--------------------------------------------------------------------------\n");
+    printf("\nCark Dondugunde Gelen Sayi Isleminizi Belirleyecektir! \n\n");
+    printf("--------------------------------------------------------------------------\n");
+    printf("\nCarkin kac kere donmesini istersiniz?\n");
+    scanf("%d",&cdonme);
+    carkislemi=cark(cdonme); //carkın dönme sayısını carkislemi fonksiyonuna gönderdik ve gelen sayıya göre yapılan işlemi belirledik.
+
+    if(carkislemi== 1  )
+    {
+        printf("Carkiniz Ozdeger Bulma Islemine Gelmistir!\n");
+        byt=boyut(); //kullanıcıdan matrisin kaç elemanlı olacağını aldık
+        int omatris[byt][byt]; //kullanıcıdan aldığımız elemana göre matris belirledik.
+        int i,j;
+        printf("Matrisinizin Elemanlarini Giriniz: \n");
+        int dizi[2];
+        for(i=0; i<byt; i++)
+        {
+            for(j=0; j<byt; j++)
+            {
+                printf("matris[%d][%d]= ",i,j); //kullanıcıdan matrisi aldık
+                scanf("%d",&omatris[i][j]);
+            }
+
+        }
+        for(i=0; i<byt; i++)
+        {
+            for(j=0; j<byt; j++)
+            {
+                printf("matris[%d][%d]= %d ",i,j,omatris[i][j]); //aldığımız matris doğru mu diye görmek için yazdırdık
+
+            }
+            printf("\n");
+
+        }
+
+
+        ozdegerbul(byt,omatris); // özdeğer bulabilmek için fonksiyona boyutu ve matrisi gönderdik
+    }
+
+    else if(carkislemi== 2)
+    {
+        printf("Carkiniz Schur Teoremi Islemine Gelmistir!\n");
+        byt=boyut();
+        int smatris[byt][byt];
+        int i,j;
+        printf("Matrisinizin Elemanlarini Giriniz: \n");
+        for(i=0; i<byt; i++)
+        {
+            for(j=0; j<byt; j++)
+            {
+                printf("matris[%d][%d]= ",i,j); //kullanıcıdan matrisi aldık
+                scanf("%d",&smatris[i][j]);
+            }
+
+        }
+        for(i=0; i<byt; i++)
+        {
+            for(j=0; j<byt; j++)
+            {
+                printf("matris[%d][%d]= %d ",i,j,smatris[i][j]); //aldığımız matris doğru mu diye görmek için yazdırdık
+
+            }
+            printf("\n");
+
+        }
+
+
+        schurteoremi(byt,smatris); //fonksiyona boyutu ve matrisi gönderdik
+    }
+    else if(carkislemi== 3 )
+    {
+        printf("Carkiniz Oz Vektor Bulma Islemine Gelmistir!\n");
+        byt=boyut();
+        int ozmatris[byt][byt];
+        int i,j;
+        printf("Matrisinizin Elemanlarini Giriniz: \n");
+        for(i=0; i<byt; i++)
+        {
+            for(j=0; j<byt; j++)
+            {
+                printf("matris[%d][%d]= ",i,j); //kullanıcıdan matrisi aldık
+                scanf("%d",&ozmatris[i][j]);
+            }
+
+        }
+        for(i=0; i<byt; i++)
+        {
+            for(j=0; j<byt; j++)
+            {
+                printf("matris[%d][%d]= %d ",i,j,ozmatris[i][j]); //aldığımız matris doğru mu diye görmek için yazdırdık
+
+            }
+            printf("\n");
+
+        }
+
+
+        ozvektorbul(byt,ozmatris); //oz vektör bulma fonksiyonuna boyutu ve matrisi gönderdik
+    }
+    else
+    {
+        printf("Carkiniz Nilpotent Matris Islemine Gelmistir!\n");
+        byt=boyut();
+        nilpotentmatris(byt); //nilpotent matrisine boyutu gönderdik
+    }
+
+
+}
+
+int boyut()
+{
+
+    int a;
+    printf("n*n boyutlu matrisiniz icin n degerini giriniz: \n");
+    scanf("%d",&a);
+    return a;
+
+
+}
+int cark(int ccdonme)
+
+{
+    int a[ccdonme]; //donme sayısı kadar bir dizi oluşturduk. Rastgele gelen sayıları elde tutabilmek için
+    int i,islem;
+    srand(time(NULL));
+    for(i=0; i<ccdonme; i++)
+    {
+        a[i]= (rand()%241);  //0-224 arasýnda rastgele sayi üretiyor
+    }
+
+    for(i=0; i<ccdonme; i++)
+    {
+        printf("%d ",a[i]);
+    }
+    islem=a[ccdonme-1]%4; //Dört tane işlemimiz olduğu için son gelen sayıya göre mod 4 işlemi uyguladık
+    printf("\n %d \n",islem);
+
+
+    return islem;
+
+}
+int get_determinant(int mtrx_size, int mat[mtrx_size][mtrx_size])
+{
+    int i, j, i_count, j_count, count=0;
+    int array[mtrx_size-1][mtrx_size-1], det = 0;
+
+    if(mtrx_size < 1)
+    {
+        printf("Determinant hesabi hata verdi!\n");
+        exit(EXIT_FAILURE);
+    }
+    if(mtrx_size == 1)
+    {
+        return mat[0][0];
+    }
+    if(mtrx_size == 2)
+    {
+        return (mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0]);
+    }
+    for(count = 0; count < mtrx_size; count++)
+    {
+        i_count = 0;
+
+        for(i = 1; i < mtrx_size; i++)
+        {
+            j_count = 0;
+
+            for(j = 0; j < mtrx_size; j++)
+            {
+                if(j == count)
+                {
+                    continue;
+                }
+                array[i_count][j_count] = mat[i][j];
+                j_count++;
+            }
+            i_count++;
+        }
+        det += pow(-1, count) * mat[0][count] * get_determinant(mtrx_size-1,array);
+    }
+    return det;
+}
+
+int ozdegerbul(int n,int *nmatris[n][n])
+
+{
+
+    int a,b,c,d,e;
+    int disk;
+    int x_1,x_2;
+    int ozmatris[n][n];
+    int i,j;
+
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<n; j++)
+        {
+            ozmatris[i][j]=nmatris[i][j]; //matrisimizi kullabilmek için yeni bir matrise atadık
+
+        }
+
+
+    }
+
+    if(n==1)
+    {
+
+        printf("Oz deger yoktur!\n"); //eğer boyut birse öz değer yoktur.
+
+    }
+    else if(n==2)
+    {
+        a=1; //diskriminant hesabı yaptık
+        b=-(ozmatris[0][0]+ozmatris[1][1]);
+        c=(ozmatris[0][0]*ozmatris[1][1]);
+        d=-(ozmatris[0][1]*ozmatris[1][0]);
+        e=c+d;
+        disk=(b*b)-(4*a*e);  // ikinci dereceden denklem çözümü
+        if(disk<0)
+        {
+            printf("Oz deger yoktur!\n");
+        }
+        else if(disk==0)
+        {
+            x_1=(-b-sqrt(disk))/(2*a);
+            printf("Oz degerler= %d %d \n",x_1,x_1);
+        }
+        else
+        {
+            x_1=(-b-sqrt(disk))/(2*a);
+            x_2=(-b+sqrt(disk))/(2*a);
+            printf("Oz degerler= %d %d \n",x_1,x_2);
+        }
+
+    }
+    int ozdegerler[2]= {x_1,x_2};
+    //printf("%d %d",ozdegerler[0],ozdegerler[1]);
+    FILE *DosyayaYazOzmatris;
+    DosyayaYazOzmatris = fopen("ozdegermatris.txt","w");
+    fprintf( DosyayaYazOzmatris,"Oz Deger Bulma\n");
+    fprintf( DosyayaYazOzmatris,"Girdiginiz Matris \n");
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<n; j++)
+        {
+            fprintf( DosyayaYazOzmatris,"%d ",ozmatris[i][j]);
+
+        }
+        fprintf( DosyayaYazOzmatris,"\n");
+
+
+    }
+    fprintf( DosyayaYazOzmatris,"\nOzDeger1:%d Ozdeger2:%d ",x_1,x_2);
+
+
+}
+
+int schurteoremi(int n,int *nmatris[n][n])
+{
+    printf("Schur islemi!\n");
+    int i,j;
+    int schurmatris[n][n];
+    FILE *DosyayaYazSchurmatris;
+    DosyayaYazSchurmatris = fopen("schurmatris.txt","w");
+    fprintf( DosyayaYazSchurmatris,"Schur Teoremi\nGirdiginiz Matris\n");
+    int a=0,b=0;
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<n; j++)
+        {
+            schurmatris[i][j]=nmatris[i][j]; //matrisimizi kullabilmek için yeni bir matrise atadık
+
+        }
+
+    }
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<n; j++)
+        {
+            fprintf( DosyayaYazSchurmatris,"%d ",schurmatris[i][j]);
+
+        }
+        fprintf(DosyayaYazSchurmatris,"\n");
+
+    }
+
+
+}
+int ozvektorbul(int n,int *nmatris[n][n])
+{
+    printf("Oz vektor islemi!\n");
+    int i,j;
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<n; j++)
+        {
+            printf("matris[%d][%d]= %d ",i,j,nmatris[i][j]);
+
+        }
+        printf("\n");
+
+    }
+    FILE *DosyayaYazOzVmatris;
+    DosyayaYazOzVmatris = fopen("OzVektorMatris.txt","w");
+    fprintf( DosyayaYazOzVmatris,"Oz Vektor Bulma İslemi \nGirdiginiz Matris\n");
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<n; j++)
+        {
+            fprintf( DosyayaYazOzVmatris,"%d ",nmatris[i][j]);
+
+        }
+        fprintf(DosyayaYazOzVmatris,"\n");
+
+    }
+
+}
+
+int nilpotentmatris(int n)
+{
+    srand(time(NULL));
+    int i,j,k,m;
+    int counter=0;
+    int nilmat[n][n];
+    int nmt[n][n];
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<n; j++)
+        {
+            nilmat[i][j]= (-15+rand()%16); //-15 ile +15 arasında rastgele sayılardan oluşan bir matris ürettildi
+        }
+
+    }
+
+    FILE *DosyayaYazNilpotent;
+    DosyayaYazNilpotent = fopen("Nilpotent.txt","w");
+    fprintf( DosyayaYazNilpotent,"Nilpotent Matris\n");
+    fprintf( DosyayaYazNilpotent,"Rastgele üretilen matris\n");
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<n; j++)
+        {
+            fprintf( DosyayaYazNilpotent,"%d ",nilmat[i][j]);
+
+        }
+
+        fprintf(DosyayaYazNilpotent,"\n");
+
+    }
+
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<n; j++)
+        {
+            printf("matris[%d][%d]= %d ",i,j,nilmat[i][j]);  //oluşan rastgele matrisi ekrana yazdırdık
+
+        }
+        printf("\n");
+
+    }
+
+    for(i=0; i<n; ++i)
+    {
+        for(j=0; j<n; ++j)
+        {
+            for(k=0; k<n; ++k)
+            {
+                nmt[i][j]+=nilmat[i][k]*nilmat[k][j]; //A*A=0 ise nilpotent matristir kuralını uygulayabilmek için oluşan matrisi kendisi ile çarptık.
+            }
+        }
+    }
+    fprintf( DosyayaYazNilpotent,"Carpim sonucu elde edilen matris!\n");
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<n; j++)
+        {
+            fprintf( DosyayaYazNilpotent,"%-15d ",nmt[i][j]);
+
+        }
+        fprintf(DosyayaYazNilpotent,"\n");
+
+    }
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<n; j++)
+        {
+            printf("matris[%d][%d]= %d ",i,j,nmt[i][j]); //yeni matrisi yazdırdık
+
+        }
+        printf("\n");
+
+    }
+
+    for(i=0; i<n; ++i)
+
+    {
+        for(j=0; j<n; ++j)
+        {
+            if(nmt[i][j] == 0)
+            {
+                counter++; //tüm elemanların sıfır olup olmadığını kontrol etmek için sayaç kullandık
+            }
+        }
+    }
+    if(counter==(n*n))
+    {
+        printf("Matrisiniz Nilpotent matrisdir!\n");
+        fprintf( DosyayaYazNilpotent,"Matrisiniz Nilpotent matristir!\n");
+    }
+
+    else if(counter!=(n*n))
+    {
+
+        printf("Matrisiniz Nilpotent matris degildir!\n");
+        fprintf( DosyayaYazNilpotent,"Matrisiniz Nilpotent matris degildir!\n");
+
+    }
+
+}
+
+
